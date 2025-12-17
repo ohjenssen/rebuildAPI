@@ -1,3 +1,4 @@
+console.log("SERVER.JS ER STARTET");
 const express = require("express");
 const cors = require("cors");
 
