@@ -29,6 +29,23 @@ db.sequelize.sync()
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to sauna application." });
 });
+/* /health ROUTE – Sequelize version */
+app.get("/health", async (req, res) => {
+  try {
+    await db.sequelize.authenticate();
+    res.json({
+      api: "ok",
+      db: "connected"
+    });
+  } catch (err) {
+    res.status(500).json({
+      api: "ok",
+      db: "error",
+      error: err.message
+    });
+  }
+});
+
 
 require("./app/routes/product.routes")(app);
 require("./app/routes/user.routes")(app);
