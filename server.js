@@ -1,3 +1,4 @@
+require("dotenv").config(); //gør at node.js læser cloudinary-oplysninger fra .env-filen.
 console.log("SERVER.JS ER STARTET");
 const express = require("express");
 const cors = require("cors");
@@ -49,6 +50,7 @@ app.get("/health", async (req, res) => {
 
 require("./app/routes/product.routes")(app);
 require("./app/routes/user.routes")(app);
+require("./app/routes/picture.routes")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
