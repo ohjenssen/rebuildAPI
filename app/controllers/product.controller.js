@@ -7,6 +7,8 @@ const Op = db.Sequelize.Op;
 
 // Create and Save a new Product
 exports.create = function (req, res) {
+  console.log("BODY:", req.body);
+  console.log("FILE:", req.file);
   // Validate request - product name
   if (!req.body.prodName) {
     res.status(400).send({
