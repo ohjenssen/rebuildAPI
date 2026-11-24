@@ -1,5 +1,6 @@
 const db = require("../models");
 const Product = db.products;
+const Picture = db.pictures;
 const Op = db.Sequelize.Op;
 
 // Create and Save a new Product
@@ -37,11 +38,18 @@ exports.create = (req, res) => {
 };
 
 // Retrieve all Products from the database.
+// and include associated pictures 
+// because of the association defined in models/index.js
 exports.findAll = (req, res) => {
     const prodName = req.query.prodName;
     var condition = prodName ? { prodName: { [Op.like]: `%${prodName}%` } } : null;
-
-    Product.findAll({ where: condition })
+    Product.findAll({
+        where: condition,
+        include: [{
+        model: Picture,
+        as: "pictures"
+}]
+    })
         .then(data => {
             res.send(data);
         })
@@ -52,7 +60,6 @@ exports.findAll = (req, res) => {
             });
         });
 };
-
 // Find a single Product with an id
 exports.findOne = (req, res) => {
     const prodID = req.params.prodID;
@@ -124,33 +131,3 @@ exports.delete = (req, res) => {
         });
 };
 
-// // Delete all Products from the database.
-// exports.deleteAll = (req, res) => {
-//       Product.destroy({
-//         where: {},
-//         truncate: false
-//     })
-//         .then(nums => {
-//             res.send({ message: `${nums} Product were deleted successfully!` });
-//             })
-//         .catch(err => {
-//             res.status(500).send({
-//                 message:
-//                 err.message || "Some error occurred while removing all products."
-//             });
-//         });
-// };
-
-// // Find all published Products
-// exports.findAllPublished = (req, res) => {
-//     Products.findAll({ where: { published: true } })
-//         .then(data => {
-//             res.send(data);
-//         })
-//     .catch(err => {
-//       res.status(500).send({
-//         message:
-//           err.message || "Some error occurred while retrieving products."
-//       });
-//     });
-// };
