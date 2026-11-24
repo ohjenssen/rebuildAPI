@@ -85,26 +85,30 @@ exports.create = function (req, res) {
   });
 };
 
-  // Retrieve all Products from the database.
-  exports.findAll = (req, res) => {
+// Retrieve all Products from the database.
+// and include associated pictures 
+// because of the association defined in models/index.js
+exports.findAll = (req, res) => {
     const prodName = req.query.prodName;
-    var condition = prodName
-      ? { prodName: { [Op.like]: `%${prodName}%` } }
-      : null;
-
-    Product.findAll({ where: condition })
-      .then((data) => {
-        res.send(data);
-      })
-      .catch((err) => {
-        res.status(500).send({
-          message:
-            err.message || "Some error occurred while retrieving products.",
+    var condition = prodName ? { prodName: { [Op.like]: `%${prodName}%` } } : null;
+    Product.findAll({
+        where: condition,
+        include: [{
+        model: Picture,
+        as: "pictures"
+}]
+    })
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message:
+                err.message || "Some error occurred while retrieving products."
+            });
         });
-      });
-  };
-
-  // Find a single Product with an id
+};
+  
 // Find a single Product with an id
 exports.findOne = (req, res) => {
   const prodID = req.params.prodID;
@@ -257,5 +261,3 @@ exports.delete = (req, res) => {
       });
     });
 };
-
-

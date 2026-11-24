@@ -1,3 +1,4 @@
+
 const dbConfig = require("../db.config.js");
 
 const Sequelize = require("sequelize");
@@ -31,5 +32,20 @@ db.products = require("./product.model.js")(sequelize, Sequelize);
 db.users = require("./user.model.js")(sequelize, Sequelize);
 db.pictures = require("./picture.model.js")(sequelize, Sequelize);
 
+// Associations, one-to-many relationship between products and pictures
+//De fortæller Sequelize, at ét produkt kan have flere billeder
+db.products.hasMany(db.pictures, {
+  foreignKey: "prodID",
+  as: "pictures"
+});
+
+db.pictures.belongsTo(db.products, {
+  foreignKey: "prodID",
+  as: "product"
+});
+
+// Debug: undersøger relationerne
+//console.log("ASSOCIATION TARGET:", db.products.associations.pictures?.target?.name);
+//console.log("RELATIONER I INDEX:", Object.keys(db.products.associations));
 
 module.exports = db;
